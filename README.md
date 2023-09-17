@@ -9,7 +9,7 @@ Use ```@vercel/ncc``` to compile code and all modules into one single file used 
 ```
 npm i -g @vercel/ncc
 
-ncc build scripts/index.js --license LICENSE.txt
+ncc build src/index.js --license LICENSE.txt
 ```
 
 The compiled file will be located under folder ```./dist```

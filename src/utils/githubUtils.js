@@ -2,7 +2,7 @@
  * Helper functions to programatically commit and push
  */
 const github = require('@actions/github');
-import { readFile } from 'fs-extra'
+import { readFile } from 'fs-extra';
 
 /**
  * Commit and push to git repository. Currently only support commit one single file.
@@ -52,7 +52,7 @@ async function getCurrentCommit(octokit, owner, repository, branch) {
 }
 
 async function createBlob(octokit, owner, repository, path) {
-    const content = await readFile(path, 'utf8')
+    const content = await readFile(path, 'utf8');
     return await octokit.rest.git.createBlob({
         owner,
         repo: repository,
