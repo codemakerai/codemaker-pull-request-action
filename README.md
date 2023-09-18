@@ -6,9 +6,15 @@ This action can used to integrate CodeMaker to pull requests. With a workflow tr
 
 [Full example here](https://github.com/codemakerai/codemaker-pull-request-action-example).
 
-Requirements: give workflow write access to your repo.
+### Requirements
 
-Under repo Settings -> Actions -> General -> Workflow permissions, make sure "Read and write permissions" is selected.
+Give workflow write access to your repo: Under repo Settings -> Actions -> General -> Workflow permissions, make sure "Read and write permissions" is selected.
+
+### Caveat
+
+Due to the limitation of Github workflow, there is no good way to handle concurrent run. The comment line number is an import parameter for CodeMaker processor to perform generation. Since the line number is determined when ```pull_request_review_comment``` web hook event is triggerred, multiple concurrent workflow trigger will cause the line number to be outdated because some other runs may have already updated the file content.
+
+Because of this limitation, it is important to post PR comment one by one, and do not post a new one until the workflow run triggerred by the previous one has completed.
 
 ```
 name: Auto update PR based on comment
@@ -23,6 +29,9 @@ env:
   COMMENT_BODY: ${{ github.event.comment.body }}
   COMMENT_LINE: ${{ github.event.comment.line }}
   COMMENT_START_LINE: ${{ github.event.comment.start_line }}
+
+concurrency:
+  group: ${{ github.workflow }} - ${{ github.event.pull_request.head.ref }}
 
 jobs:
   update_pr_job:
