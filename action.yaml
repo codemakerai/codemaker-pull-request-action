@@ -1,6 +1,9 @@
 # action.yml
 name: 'CodeMaker CodeReview Action'
 description: 'Integrate CodeMaker with code review comments'
+branding:
+  icon: 'code'
+  color: 'blue'
 inputs:
   access-token:
     description: 'A token with write access to your repository'
