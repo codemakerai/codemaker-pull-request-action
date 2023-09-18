@@ -1,6 +1,6 @@
 # action.yml
-name: 'CodeMaker CodeReview Action'
-description: 'Integrate CodeMaker with code review comments'
+name: 'CodeMaker Pull Request Action'
+description: 'Auto update pull request based on user comments.'
 branding:
   icon: 'code'
   color: 'blue'
