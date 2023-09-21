@@ -26,7 +26,7 @@ on:
     types: [created]
 
 env:
-  HEAD_BRANDH: ${{ github.event.pull_request.head.ref }}
+  HEAD_BRANCH: ${{ github.event.pull_request.head.ref }}
   COMMENT_FILE_PATH: ${{ github.event.comment.path }}
   COMMENT_BODY: ${{ github.event.comment.body }}
   COMMENT_LINE: ${{ github.event.comment.line }}
@@ -42,7 +42,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
         with:
-          ref: ${{ env.HEAD_BRANDH }}
+          ref: ${{ env.HEAD_BRANCH }}
       - name: Code Review Action
         uses: codemakerai/codemaker-pull-request-action@v1.0.0
         with:
@@ -54,5 +54,5 @@ jobs:
           comment-start-line: ${{ env.COMMENT_START_LINE }}
           owner: YOUR_USER_OR_ORG_NAME
           repository: YOUR_REPO_NAME
-          branch: ${{ env.HEAD_BRANDH}}
+          branch: ${{ env.HEAD_BRANCH}}
 ```
