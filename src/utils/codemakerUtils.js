@@ -1,5 +1,8 @@
 import { Status, Mode, Modify } from 'codemaker-sdk';
 
+const pollingIntervalMilliseconds = 500;
+const timeoutMilliseconds = 10 * 60 * 1000;
+
 /**
  * Process generation task.
  * 
@@ -9,7 +12,7 @@ import { Status, Mode, Modify } from 'codemaker-sdk';
  * @param {*} timeoutMilliseconds         Processing time out.
  * @returns Generated source code.
  */
-export const processTask = async (client, createProcessRequest, pollingIntervalMilliseconds, timeoutMilliseconds) => {
+export const processTask = async (client, createProcessRequest) => {
     const processTask = await client.createProcess(createProcessRequest);
     const taskId = processTask.data.id;
     let status = Status.inProgress;

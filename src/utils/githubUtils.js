@@ -1,12 +1,12 @@
 /**
- * Helper functions to programatically commit and push
+ * Helper functions to programmatically commit and push
  */
-const github = require('@actions/github');
-import { readFile } from 'fs-extra';
+import * as github from '@actions/github';
+import {readFile} from 'fs-extra';
 
 /**
  * Commit and push to git repository. Currently only support commit one single file.
- * 
+ *
  * @param {*} accessToken  Github access token.
  * @param {*} owner        The repository owner (user/organization name).
  * @param {*} repository   The repository name.
@@ -14,15 +14,22 @@ import { readFile } from 'fs-extra';
  * @param {*} path         The path of the file to commit and push.
  * @param {*} message      The commit message.
  */
-export const commitAndPushSingleFile = async (accessToken, owner, repository, branch, path, message) => {
+export const commitAndPushSingleFile = async (accessToken, owner, repository, branch, paths, message) => {
     const octokit = github.getOctokit(accessToken);
     // get current head commit
     const currentCommit = await getCurrentCommit(octokit, owner, repository, branch);
 
     // create new blob -> create new tree -> create new commit
-    const { data: blobData } = await createBlob(octokit, owner, repository, path);
-    const { data: treeData } = await createTree(octokit, owner, repository, blobData.sha, path, currentCommit.treeSha);
-    const { data: commitData } = await createCommit(octokit, owner, repository, message, treeData.sha, currentCommit.commitSha);
+    const blobs = [];
+    for (let i = 0; i < paths.length; i++) {
+        const {data: blob} = await createBlob(octokit, owner, repository, paths[i]);
+        blobs.push({
+            path: paths[i],
+            sha: blob.sha
+        })
+    }
+    const {data: treeData} = await createTree(octokit, owner, repository, blobs, currentCommit.treeSha);
+    const {data: commitData} = await createCommit(octokit, owner, repository, message, treeData.sha, currentCommit.commitSha);
 
     // git push
     await octokit.rest.git.updateRef({
@@ -34,13 +41,13 @@ export const commitAndPushSingleFile = async (accessToken, owner, repository, br
 }
 
 async function getCurrentCommit(octokit, owner, repository, branch) {
-    const { data: refData } = await octokit.rest.git.getRef({
+    const {data: refData} = await octokit.rest.git.getRef({
         owner,
         repo: repository,
         ref: `heads/${branch}`,
     });
     const commitSha = refData.object.sha;
-    const {data: commitData } = await octokit.rest.git.getCommit({
+    const {data: commitData} = await octokit.rest.git.getCommit({
         owner,
         repo: repository,
         commit_sha: commitSha,
@@ -61,16 +68,19 @@ async function createBlob(octokit, owner, repository, path) {
     });
 }
 
-async function createTree(octokit, owner, repository, blobSha, path, parentTreeSha) {
+async function createTree(octokit, owner, repository, blobs, parentTreeSha) {
+    const tree = blobs.map(blob => ({
+            path: blob.path,
+            sha: blob.sha,
+            mode: '100644',
+            type: 'blob',
+        }
+    ));
+    console.log(tree);
     return await octokit.rest.git.createTree({
         owner,
         repo: repository,
-        tree: [{
-            path,
-            mode: `100644`,
-            type: `blob`,
-            sha: blobSha
-        }],
+        tree: tree,
         base_tree: parentTreeSha
     });
 }
@@ -83,4 +93,26 @@ async function createCommit(octokit, owner, repository, message, treeSha, parent
         tree: treeSha,
         parents: [parentCommitSha]
     });
+}
+
+export const getReviewComments = async (accessToken, owner, repository, pullNumber, reviewId) => {
+    const octokit = github.getOctokit(accessToken);
+
+    const {data: reviewComments} = await octokit.rest.pulls.listCommentsForReview({
+        owner,
+        repo: repository,
+        pull_number: pullNumber,
+        review_id: reviewId
+    });
+
+    const comments = [];
+    for (let i = 0; i < reviewComments.length; i++) {
+        const {data: comment} = await octokit.rest.pulls.getReviewComment({
+            owner,
+            repo: repository,
+            comment_id: reviewComments[i].id
+        });
+        comments.push(comment);
+    }
+    return comments;
 }

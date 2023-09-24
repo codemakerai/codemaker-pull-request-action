@@ -23,11 +23,11 @@ export const isFileSupported = (fileName) => {
 export const langFromFileExtension = (fileName) => {
     const extension = fileName.split('.').pop();
     if (!extension) {
-        throw new UnsupportedLanguageError("Could not determine file language " + fileName);
+        throw new Error("Could not determine file language " + fileName);
     }
     const language = languages.get(extension);
     if (!language) {
-        throw new UnsupportedLanguageError("Language is not supported for file with extension " + extension);
+        throw new Error("Language is not supported for file with extension " + extension);
     }
     return language;
 }
