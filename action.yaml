@@ -6,25 +6,10 @@ branding:
   color: 'blue'
 inputs:
   access-token:
-    description: 'A token with write access to your repository'
+    description: 'GitHub Personal Access Token (PAT) with write access to your repository'
     required: true
   api-key:
-    description: 'CodeMaker api key'
-    required: true
-  owner:
-    description: 'The repository owner (user/organization name). Not case sensitive.'
-    required: true
-  repository:
-    description: 'Repository name. Not case senstive'
-    required: true
-  branch:
-    description: 'Code review head branch. Available through github.event.pull_request.head.ref'
-    required: true
-  pull-request-number:
-    description: 'Pull request id. Available through github.event.pull_request.number'
-    required: true
-  review-id:
-    description: 'Pull request review id. Available through github.event.review.id'
+    description: 'CodeMaker API Key'
     required: true
 runs:
   using: 'node16'

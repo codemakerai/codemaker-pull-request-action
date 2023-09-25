@@ -14911,12 +14911,12 @@ __nccwpck_require__.d(__webpack_exports__, {
 
 // EXTERNAL MODULE: ./node_modules/@actions/core/lib/core.js
 var core = __nccwpck_require__(2186);
+// EXTERNAL MODULE: ./node_modules/@actions/github/lib/github.js
+var github = __nccwpck_require__(5438);
 // EXTERNAL MODULE: ./node_modules/fs-extra/lib/index.js
 var lib = __nccwpck_require__(5630);
 // EXTERNAL MODULE: ./node_modules/codemaker-sdk/dist/src/index.js
 var src = __nccwpck_require__(5017);
-// EXTERNAL MODULE: ./node_modules/@actions/github/lib/github.js
-var github = __nccwpck_require__(5438);
 ;// CONCATENATED MODULE: ./src/utils/githubUtils.js
 /**
  * Helper functions to programmatically commit and push
@@ -15203,17 +15203,18 @@ const lineNumber = (comment) => {
 
 
 
+
 const runAction = async () => {
     // git action inputs
     const accessToken = core.getInput("access-token");
     const apiKey = core.getInput("api-key");
 
-    const owner = core.getInput("owner");
-    const repository = core.getInput("repository");
-    const branch = core.getInput("branch");
+    const owner = github.context.payload.repository.owner.login;
+    const repository = github.context.payload.repository.name;
+    const branch = github.context.payload.pull_request.head.ref;
 
-    const pullRequestNumber = core.getInput("pull-request-number");
-    const reviewId = core.getInput("review-id");
+    const pullRequestNumber = github.context.payload.pull_request.number;
+    const reviewId = github.context.payload.review.id;
 
     console.log(`Processing code review ${reviewId} on pull request ${pullRequestNumber}.`);
 

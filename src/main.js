@@ -1,4 +1,5 @@
 import * as core from '@actions/core'
+import * as github from '@actions/github'
 import {readFile, writeFile} from 'fs-extra';
 import {Client} from 'codemaker-sdk';
 import {commitAndPushSingleFile, getReviewComments} from './utils/githubUtils';
@@ -11,12 +12,12 @@ export const runAction = async () => {
     const accessToken = core.getInput("access-token");
     const apiKey = core.getInput("api-key");
 
-    const owner = core.getInput("owner");
-    const repository = core.getInput("repository");
-    const branch = core.getInput("branch");
+    const owner = github.context.payload.repository.owner.login;
+    const repository = github.context.payload.repository.name;
+    const branch = github.context.payload.pull_request["head"]["ref"];
 
-    const pullRequestNumber = core.getInput("pull-request-number");
-    const reviewId = core.getInput("review-id");
+    const pullRequestNumber = github.context.payload.pull_request.number;
+    const reviewId = github.context.payload["review"]["id"];
 
     console.log(`Processing code review ${reviewId} on pull request ${pullRequestNumber}.`);
 
