@@ -6,32 +6,10 @@ branding:
   color: 'blue'
 inputs:
   access-token:
-    description: 'A token with write access to your repository'
+    description: 'GitHub Personal Access Token (PAT) with write access to your repository'
     required: true
   api-key:
-    description: 'CodeMaker api key'
-    required: true
-  comment-file-path:
-    description: 'The relative path of the file to which the comment applies. Available through github.event.comment.path'
-    required: true
-  comment-body:
-    description: 'The text of the comment. Available through github.event.comment.body'
-    required: true
-  comment-line:
-    description: 'The line of the blob to which the comment applies. OR The last line of the range for a multi-line comment. Available through github.event.comment.line'
-    required: true
-  comment-start-line:
-    description: 'For multi-line comment only. The first line of the range for a multi-line comment. Available through github.event.comment.start_line'
-    required: false
-    default: '-1'
-  owner:
-    description: 'The repository owner (user/organization name). Not case sensitive.'
-    required: true
-  repository:
-    description: 'Repository name. Not case senstive'
-    required: true
-  branch:
-    description: 'Code review head branch. Available through github.event.pull_request.head.ref'
+    description: 'CodeMaker API Key'
     required: true
 runs:
   using: 'node16'
