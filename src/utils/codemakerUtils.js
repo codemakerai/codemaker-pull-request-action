@@ -8,8 +8,6 @@ const timeoutMilliseconds = 10 * 60 * 1000;
  * 
  * @param {*} client                      CodeMaker client.
  * @param {*} createProcessRequest        Request object.
- * @param {*} pollingIntervalMilliseconds How often to poll the processing status.
- * @param {*} timeoutMilliseconds         Processing time out.
  * @returns Generated source code.
  */
 export const processTask = async (client, createProcessRequest) => {

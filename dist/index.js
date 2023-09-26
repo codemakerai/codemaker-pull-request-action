@@ -15083,8 +15083,6 @@ const timeoutMilliseconds = 10 * 60 * 1000;
  * 
  * @param {*} client                      CodeMaker client.
  * @param {*} createProcessRequest        Request object.
- * @param {*} pollingIntervalMilliseconds How often to poll the processing status.
- * @param {*} timeoutMilliseconds         Processing time out.
  * @returns Generated source code.
  */
 const processTask = async (client, createProcessRequest) => {
@@ -15215,6 +15213,7 @@ const runAction = async () => {
 
     const pullRequestNumber = github.context.payload.pull_request.number;
     const reviewId = github.context.payload.review.id;
+    const authorLogin = github.context.payload.review.user.login;
 
     console.log(`Processing code review ${reviewId} on pull request ${pullRequestNumber}.`);
 
@@ -15243,7 +15242,7 @@ const runAction = async () => {
 
     console.log("Commit and push");
     const paths = [...modified]
-    await commitAndPushSingleFile(accessToken, owner, repository, branch, paths, "Updated PR base on comments");
+    await commitAndPushSingleFile(accessToken, owner, repository, branch, paths, `Updated PR base on comments from code review by ${authorLogin}`);
 }
 
 

@@ -18,6 +18,7 @@ export const runAction = async () => {
 
     const pullRequestNumber = github.context.payload.pull_request.number;
     const reviewId = github.context.payload["review"]["id"];
+    const authorLogin = github.context.payload["review"]["user"]["login"];
 
     console.log(`Processing code review ${reviewId} on pull request ${pullRequestNumber}.`);
 
@@ -46,5 +47,5 @@ export const runAction = async () => {
 
     console.log("Commit and push");
     const paths = [...modified]
-    await commitAndPushSingleFile(accessToken, owner, repository, branch, paths, "Updated PR base on comments");
+    await commitAndPushSingleFile(accessToken, owner, repository, branch, paths, `Updated PR base on comments from code review by ${authorLogin}`);
 }
