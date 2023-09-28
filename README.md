@@ -1,6 +1,6 @@
 # codemaker-pull-request-action
 
-This action can used to integrate CodeMaker to pull requests. With a workflow triggered by pull request comments, this action will update the code based on the comment.
+This action can be used to integrate CodeMaker AI to pull requests process. With a workflow triggered by pull request review, this action will update the code based on the specific comment.
 
 ## How to use
 
@@ -9,6 +9,13 @@ This action can used to integrate CodeMaker to pull requests. With a workflow tr
 ### Requirements
 
 Give workflow write access to your repo: Under repo Settings -> Actions -> General -> Workflow permissions, make sure "Read and write permissions" is selected.
+
+## How to use
+
+This GitHub action takes 2 (required) inputs:
+
+* access-token: GitHub Personal Access Token (PAT).
+* api-key: Your CodeMaker API Key. For security, please consider using [secrets](https://docs.github.com/en/actions/security-guides/encrypted-secrets) to provide this value.
 
 ### Limitation
 
@@ -56,3 +63,7 @@ jobs:
           repository: YOUR_REPO_NAME
           branch: ${{ env.HEAD_BRANCH}}
 ```
+
+## License
+
+MIT License
