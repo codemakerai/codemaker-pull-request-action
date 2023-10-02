@@ -3,7 +3,7 @@ import * as github from '@actions/github'
 import {readFile, writeFile} from 'fs-extra';
 import {Client} from 'codemaker-sdk';
 import {commitAndPushSingleFile, getReviewComments} from './utils/githubUtils';
-import {langFromFileExtension} from './utils/languageUtils';
+import {isFileSupported, langFromFileExtension} from './utils/languageUtils';
 import {createProcessRequest, processTask} from './utils/codemakerUtils';
 import {lineNumber, orderComments} from "./utils/commentUtils";
 
@@ -31,6 +31,11 @@ export const runAction = async () => {
     for (let i = 0; i < comments.length; i++) {
         const comment = comments[i];
         const path = comment.path;
+        if (!isFileSupported(path)) {
+            console.log(`Skipping unsupported file ${path}`);
+            continue;
+        }
+
         const line = lineNumber(comment);
         const language = langFromFileExtension(path);
         console.log(`Running code generation for file ${path}. Language detected: ${language}. Line number: ${line}. Prompt: ${comment.body}`);
