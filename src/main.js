@@ -50,7 +50,11 @@ export const runAction = async () => {
         modified.add(path);
     }
 
-    console.log("Commit and push");
-    const paths = [...modified]
-    await commitAndPushSingleFile(accessToken, owner, repository, branch, paths, `Updated PR base on comments from code review by ${authorLogin}`);
+    if (modified.size === 0) {
+        console.log("No changes to push.");
+    } else {
+        console.log("Commit and push");
+        const paths = [...modified]
+        await commitAndPushSingleFile(accessToken, owner, repository, branch, paths, `Updated PR base on comments from code review by ${authorLogin}`);
+    }
 }
