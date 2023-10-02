@@ -15226,6 +15226,11 @@ const runAction = async () => {
     for (let i = 0; i < comments.length; i++) {
         const comment = comments[i];
         const path = comment.path;
+        if (!isFileSupported(path)) {
+            console.log(`Skipping unsupported file ${path}`);
+            continue;
+        }
+
         const line = lineNumber(comment);
         const language = langFromFileExtension(path);
         console.log(`Running code generation for file ${path}. Language detected: ${language}. Line number: ${line}. Prompt: ${comment.body}`);
