@@ -19,11 +19,10 @@ This GitHub action takes 2 (required) inputs:
 
 ### Limitation
 
-Due to the limitation of Github workflow, there is no good way to handle concurrent run. The comment line number is an import parameter for CodeMaker processor to perform generation. Since the line number is determined when ```pull_request_review_comment``` web hook event is triggerred, multiple concurrent workflow trigger will cause the line number to be outdated because some other runs may have already updated the file content.
-
-Because of this limitation, it is important to post PR comment one by one, and do not post a new one until the workflow run triggerred by the previous one has completed.
-
-We are currently working on a solution on this.  
+The best way of using this action is through either Pull Request code review, when multiple comments can be submitted at 
+once or through single pull requests comment. Creating multiple single comments in quick succession will cause race 
+condition as the comments will become out of sync with the code. Submitting multiple comments at once can be done in 
+reliable way only through pull request code review.   
 
 ```
 name: Auto update PR based on comment
@@ -31,13 +30,6 @@ name: Auto update PR based on comment
 on:
   pull_request_review_comment:
     types: [created]
-
-env:
-  HEAD_BRANCH: ${{ github.event.pull_request.head.ref }}
-  COMMENT_FILE_PATH: ${{ github.event.comment.path }}
-  COMMENT_BODY: ${{ github.event.comment.body }}
-  COMMENT_LINE: ${{ github.event.comment.line }}
-  COMMENT_START_LINE: ${{ github.event.comment.start_line }}
 
 concurrency:
   group: ${{ github.workflow }} - ${{ github.event.pull_request.head.ref }}
@@ -55,13 +47,6 @@ jobs:
         with:
           access-token: ${{ secrets.GITHUB_TOKEN }}
           api-key: ${{ secrets.CODEMAKER_API_KEY }}
-          comment-file-path: ${{ env.COMMENT_FILE_PATH }}
-          comment-body: ${{ env.COMMENT_BODY }}
-          comment-line: ${{ env.COMMENT_LINE }}
-          comment-start-line: ${{ env.COMMENT_START_LINE }}
-          owner: YOUR_USER_OR_ORG_NAME
-          repository: YOUR_REPO_NAME
-          branch: ${{ env.HEAD_BRANCH}}
 ```
 
 ## License
