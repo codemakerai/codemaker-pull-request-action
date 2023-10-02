@@ -25,11 +25,11 @@ condition as the comments will become out of sync with the code. Submitting mult
 reliable way only through pull request code review.   
 
 ```
-name: Auto update PR based on comment
+name: Auto update PR based on PR review
 
 on:
-  pull_request_review_comment:
-    types: [created]
+  pull_request_review:
+    types: [submitted]
 
 concurrency:
   group: ${{ github.workflow }} - ${{ github.event.pull_request.head.ref }}
@@ -43,7 +43,7 @@ jobs:
         with:
           ref: ${{ env.HEAD_BRANCH }}
       - name: Code Review Action
-        uses: codemakerai/codemaker-pull-request-action@v1.0.0
+        uses: codemakerai/codemaker-pull-request-action@v2.0.0
         with:
           access-token: ${{ secrets.GITHUB_TOKEN }}
           api-key: ${{ secrets.CODEMAKER_API_KEY }}
